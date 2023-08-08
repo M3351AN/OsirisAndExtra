@@ -1637,8 +1637,12 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
     if (!activeWeapon)
         return;
 
+    if (localPlayer->shotsFired() < 1)
+        return;
+
     if (ImVec2 pos; Helpers::worldToScreen(local.aimPunch, pos))
     {
+
         const auto& displaySize = ImGui::GetIO().DisplaySize;
         const auto radius = std::tan(Helpers::deg2rad(0.5) / (16.0f / 6.0f)) / std::tan(Helpers::deg2rad(localPlayer->isScoped() ? localPlayer->fov() : (config->visuals.fov + 90.0f)) / 2.0f) * displaySize.x;
         if (radius > displaySize.x || radius > displaySize.y || !std::isfinite(radius))
