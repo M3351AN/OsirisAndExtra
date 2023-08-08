@@ -4,6 +4,8 @@
 #include "fnv.h"
 #include "GameData.h"
 
+#include "SDK/Engine.h"
+
 #include "Interfaces.h"
 #include "Memory.h"
 #include "Logger.h"
@@ -12,6 +14,8 @@
 #include "Hacks/resolver.h"
 #include "Hacks/SkinChanger.h"
 #include "Hacks/Visuals.h"
+
+#include "Config.h"
 
 EventListener::EventListener() noexcept
 {
@@ -22,6 +26,7 @@ EventListener::EventListener() noexcept
 
     interfaces->gameEventManager->addListener(this, "round_start");
     interfaces->gameEventManager->addListener(this, "round_freeze_end");
+    interfaces->gameEventManager->addListener(this, "cs_win_panel_match");
     interfaces->gameEventManager->addListener(this, "player_hurt");
     interfaces->gameEventManager->addListener(this, "bullet_impact");
 
@@ -106,6 +111,10 @@ void EventListener::fireGameEvent(GameEvent* event)
         break;
     case fnv::hash("inferno_expire"):
         Visuals::molotovExtinguishEvent(event);
+        break;
+    case fnv::hash("cs_win_panel_match"):
+        if (config->misc.autoDisconnect)
+            interfaces->engine->clientCmdUnrestricted("disconnect");
         break;
     }
 }

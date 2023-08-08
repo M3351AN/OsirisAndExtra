@@ -2022,6 +2022,7 @@ void GUI::renderMiscWindow() noexcept
     ImGui::Checkbox("Sv pure bypass", &config->misc.svPureBypass);
     ImGui::Checkbox("Unlock inventory", &config->misc.inventoryUnlocker);
     ImGui::Checkbox("Unlock hidden cvars", &config->misc.unhideConvars);
+    ImGui::Checkbox("Auto disconnect", &config->misc.autoDisconnect);
     ImGui::Checkbox("Preserve Killfeed", &config->misc.preserveKillfeed.enabled);
     ImGui::SameLine();
 

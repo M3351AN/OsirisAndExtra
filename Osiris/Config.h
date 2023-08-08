@@ -417,6 +417,7 @@ public:
         bool svPureBypass{ true };
         bool inventoryUnlocker{ false };
         bool unhideConvars{ false };
+        bool autoDisconnect{ false };
         KillfeedChanger killfeedChanger;
         PreserveKillfeed preserveKillfeed;
         char clanTag[16];

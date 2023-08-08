@@ -772,6 +772,7 @@ static void from_json(const json& j, Config::Misc& m)
     read<value_t::object>(j, "Logger options", m.loggerOptions);
     read(j, "Name", m.name, sizeof(m.name));
     read(j, "Custom name", m.customName);
+    read(j, "Auto disconnect", m.autoDisconnect);
 }
 
 static void from_json(const json& j, Config::Misc::Reportbot& r)
@@ -1455,6 +1456,7 @@ static void to_json(json& j, const Config::Misc& o)
     WRITE("Logger options", loggerOptions);
     WRITE("Custom clantag", customClanTag);
     WRITE("Custom name", customName);
+    WRITE("Auto disconnect", autoDisconnect);
 
     if (o.clanTag[0])
         j["Name"] = o.name;
