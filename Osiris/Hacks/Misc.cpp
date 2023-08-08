@@ -349,12 +349,12 @@ public:
             //Certain characters are censured on printf
             if (jumps > 2)
                 memory->clientMode->getHudChat()->printf(0,
-                    " \x0C\u2022Osiris\u2022\x01 %c%s: %.2f units \x01[\x05%d\x01 Strafes | \x05%.0f\x01 Pre | \x05%.0f\x01 Max | \x05%.1f\x01 Height | \x05%d\x01 Bhops | \x05%.0f\x01 Sync]",
+                    " \x0C\u2022Uki\u2022\x01 %c%s: %.2f units \x01[\x05%d\x01 Strafes | \x05%.0f\x01 Pre | \x05%.0f\x01 Max | \x05%.1f\x01 Height | \x05%d\x01 Bhops | \x05%.0f\x01 Sync]",
                     color, jump.c_str(),
                     units, strafes, pre, maxVelocity, maxHeight, jumps, sync);
             else
                 memory->clientMode->getHudChat()->printf(0,
-                    " \x0C\u2022Osiris\u2022\x01 %c%s: %.2f units \x01[\x05%d\x01 Strafes | \x05%.0f\x01 Pre | \x05%.0f\x01 Max | \x05%.1f\x01 Height | \x05%.0f\x01 Sync]",
+                    " \x0C\u2022Uki\u2022\x01 %c%s: %.2f units \x01[\x05%d\x01 Strafes | \x05%.0f\x01 Pre | \x05%.0f\x01 Max | \x05%.1f\x01 Height | \x05%.0f\x01 Sync]",
                     color, jump.c_str(),
                     units, strafes, pre, maxVelocity, maxHeight, sync);
         }
@@ -1643,11 +1643,11 @@ void Misc::watermark() noexcept
     frame_rate = 0.9f * frame_rate + 0.1f * memory->globalVars->absoluteFrameTime;
     GameData::Lock lock;
     const auto& [exists, alive, inReload, shooting, noScope, nextWeaponAttack, fov, handle, flashDuration, aimPunch, origin, inaccuracy, team, velocityModifier] { GameData::local() };
-    ImGui::Text("Osiris [%s] | %d FPS | %d MS | %s | %s%s%s",
+    ImGui::Text("Uki [%s] | %d FPS | %d MS | %s | %s%s%s",
 #ifdef DEBUG
-        "DEBUG",
+        "DEV",
 #else
-        "RELEASE",
+        "LIVE",
 #endif
         frame_rate != 0.0f ? static_cast<int>(1 / frame_rate) : 0,
         GameData::getNetOutgoingLatency(),
@@ -2507,7 +2507,7 @@ void Misc::chatRevealer(GameEvent& event, GameEvent* events) noexcept
     if (!entity)
         return;
 
-    std::string output = "\x0C\u2022Osiris\u2022\x01 ";
+    std::string output = "\x0C\u2022Uki\u2022\x01 ";
 
     auto team = entity->getTeamNumber();
     bool isAlive = entity->isAlive();
@@ -2643,7 +2643,7 @@ void Misc::voteRevealer(GameEvent& event) noexcept
     const auto isLocal = localPlayer && entity == localPlayer.get();
     const char color = votedYes ? '\x06' : '\x07';
 
-    memory->clientMode->getHudChat()->printf(0, " \x0C\u2022Osiris\u2022 %c%s\x01 voted %c%s\x01", isLocal ? '\x01' : color, isLocal ? "You" : entity->getPlayerName().c_str(), color, votedYes ? "Yes" : "No");
+    memory->clientMode->getHudChat()->printf(0, " \x0C\u2022Uki\u2022 %c%s\x01 voted %c%s\x01", isLocal ? '\x01' : color, isLocal ? "You" : entity->getPlayerName().c_str(), color, votedYes ? "Yes" : "No");
 }
 
 // ImGui::ShadeVertsLinearColorGradientKeepAlpha() modified to do interpolation in HSV
