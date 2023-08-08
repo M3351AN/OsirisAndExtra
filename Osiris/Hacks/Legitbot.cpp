@@ -13,7 +13,7 @@ void Legitbot::updateInput() noexcept
 
 void Legitbot::run(UserCmd* cmd) noexcept
 {
-    if (!config->legitbotKey.isActive())
+    if (!config->legitbotKey.isActive() && !config->triggerbotKey.isActive())
         return;
 
     if (!localPlayer || localPlayer->nextAttack() > memory->globalVars->serverTime() || localPlayer->isDefusing() || localPlayer->waitForNoAttack())
@@ -29,7 +29,6 @@ void Legitbot::run(UserCmd* cmd) noexcept
     auto weaponIndex = getWeaponIndex(activeWeapon->itemDefinitionIndex2());
     if (!weaponIndex)
         return;
-
     const auto& cfg = config->legitbot;
 
     auto weaponClass = getWeaponClass(activeWeapon->itemDefinitionIndex2());
@@ -39,6 +38,14 @@ void Legitbot::run(UserCmd* cmd) noexcept
     if (!cfg[weaponIndex].enabled)
         weaponIndex = 0;
 
+    auto magnetWeaponIndex = getWeaponIndex(activeWeapon->itemDefinitionIndex2());
+
+    if (!config->triggerbot[magnetWeaponIndex].enabled)
+        magnetWeaponIndex = weaponClass;
+
+    if (!config->triggerbot[magnetWeaponIndex].enabled)
+        magnetWeaponIndex = 0;
+
     const auto aimPunch = activeWeapon->requiresRecoilControl() ? localPlayer->getAimPunch() : Vector{ };
 
     if (config->recoilControlSystem.enabled && (config->recoilControlSystem.horizontal || config->recoilControlSystem.vertical) && aimPunch.notNull())
@@ -46,7 +53,7 @@ void Legitbot::run(UserCmd* cmd) noexcept
         static Vector lastAimPunch{ };
         if (localPlayer->shotsFired() > config->recoilControlSystem.shotsFired)
         {
-            if (cmd->buttons & UserCmd::IN_ATTACK)
+            if (cmd->buttons & UserCmd::IN_ATTACK || (config->triggerbotKey.isActive() && config->triggerbot[magnetWeaponIndex].magnet))
             {
                 Vector currentPunch = aimPunch;
 
@@ -81,7 +88,7 @@ void Legitbot::run(UserCmd* cmd) noexcept
     if (!cfg[weaponIndex].ignoreFlash && localPlayer->isFlashed())
         return;
 
-    if (cfg[weaponIndex].enabled && (cmd->buttons & UserCmd::IN_ATTACK || cfg[weaponIndex].aimlock)) {
+    if (cfg[weaponIndex].enabled && ((cmd->buttons & UserCmd::IN_ATTACK || (config->triggerbotKey.isActive() && config->triggerbot[magnetWeaponIndex].magnet)) || cfg[weaponIndex].aimlock)) {
 
         auto bestFov = cfg[weaponIndex].fov;
         Vector bestTarget{ };
