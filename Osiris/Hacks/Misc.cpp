@@ -1678,7 +1678,16 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 
 void Misc::headshotLine(ImDrawList* drawList) noexcept
 {
+    if (!localPlayer || !localPlayer->isAlive())
+        return;
 
+    const auto& displaySize = ImGui::GetIO().DisplaySize;
+    ImVec2 pos;
+    pos.x = displaySize.x / 2.0f;
+    pos.y = displaySize.y / 2.0f - displaySize.y / (2.0f * std::tan((config->visuals.fov + 90.0f) / 2.0f * acos(-1) / 180.0f)) * std::tan(localPlayer->eyeAngles().x * acos(-1) / 180.0f);
+    const auto radius = 0.003 / std::tan(Helpers::deg2rad(config->visuals.fov + 90.0f) / 2.0f) * displaySize.x;
+    const auto color = Helpers::calculateColor(config->misc.recoilCrosshair);
+    drawList->AddCircle(pos, radius, color | IM_COL32_A_MASK, 360);
 }
 
 void Misc::watermark() noexcept
