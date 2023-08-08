@@ -526,7 +526,7 @@ ImTextureID SkinChanger::getItemIconTexture(const std::string& iconpath) noexcep
 
     if (const auto handle = interfaces->baseFileSystem->open(("resource/flash/" + iconpath + "_large.png").c_str(), "r", "GAME")) {
         if (const auto size = interfaces->baseFileSystem->size(handle); size > 0) {
-            const auto buffer = std::make_unique<std::uint8_t[]>(size);
+            const auto buffer = std::unique_ptr <std::uint8_t[]>(new std::uint8_t[size]);
             if (interfaces->baseFileSystem->read(buffer.get(), size, handle) > 0) {
                 int width, height;
                 stbi_set_flip_vertically_on_load_thread(false);
