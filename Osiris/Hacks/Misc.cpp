@@ -1638,13 +1638,6 @@ void Misc::noscopeCrosshair(ImDrawList* drawList) noexcept
     }
 
     drawCrosshair(drawList, ImGui::GetIO().DisplaySize / 2, Helpers::calculateColor(config->misc.noscopeCrosshair));
-    /*static auto nozoom_crosshair = interfaces->cvar->findVar("weapon_debug_spread_show");
-
-    GameData::Lock lock;
-    if (const auto& local = GameData::local(); !config->misc.noscopeCrosshair || !local.exists || !local.alive || !local.noScope)
-        nozoom_crosshair->setValue(0);
-    else
-        nozoom_crosshair->setValue(3);*/
 }
 
 void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
@@ -1668,21 +1661,22 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
     if (!activeWeapon)
         return;
 
-    if (localPlayer->shotsFired() < 1)
+    if (activeWeapon->isPistol() ? !activeWeapon->isInReload() && activeWeapon->nextPrimaryAttack() < memory->globalVars->serverTime() : localPlayer->shotsFired() < 1)
         return;
 
     if (ImVec2 pos; Helpers::worldToScreen(local.aimPunch, pos))
     {
-
         const auto& displaySize = ImGui::GetIO().DisplaySize;
-        const auto radius = 0.003 / std::tan(Helpers::deg2rad(localPlayer->isScoped() ? localPlayer->fov() : (config->visuals.fov + 90.0f)) / 2.0f) * displaySize.x;
-        if (radius > displaySize.x || radius > displaySize.y || !std::isfinite(radius))
-            return;
-
+        const auto radius = 0.003 / std::tan(Helpers::deg2rad(config->visuals.fov + 90.0f) / 2.0f) * displaySize.x;
         const auto color = Helpers::calculateColor(config->misc.recoilCrosshair);
-        drawList->AddCircle(localPlayer->shotsFired() > 1 ? pos : displaySize / 2.0f, radius, color | IM_COL32_A_MASK, 360);
+        drawList->AddCircle(pos, radius, color | IM_COL32_A_MASK, 360);
     
     }
+}
+
+void Misc::headshotLine(ImDrawList* drawList) noexcept
+{
+
 }
 
 void Misc::watermark() noexcept
@@ -2029,7 +2023,7 @@ void Misc::stealNames() noexcept
     for (int i = 1; i <= memory->globalVars->maxClients; ++i) {
         const auto entity = interfaces->entityList->getEntity(i);
 
-        if (!entity || entity == localPlayer.get())
+        if (!entity || entity == localPlayer.get() || entity->isOtherEnemy(localPlayer.get()))
             continue;
 
         PlayerInfo playerInfo;

@@ -14,7 +14,7 @@ public:
     void handleToggle() noexcept;
     bool isOpen() noexcept { return open; }
 private:
-    bool open = true;
+    bool open = false;
 
     void renderGuiStyle() noexcept;
     void renderLegitbotWindow() noexcept;
