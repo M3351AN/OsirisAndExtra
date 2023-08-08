@@ -421,7 +421,7 @@ public:
         PreserveKillfeed preserveKillfeed;
         char clanTag[16];
         char name[16];
-        bool noscopeCrosshair{ false };
+        ColorToggle noscopeCrosshair{ 1.0f, 1.0f, 1.0f, 1.0f };
         ColorToggle recoilCrosshair{ 1.0f, 1.0f, 1.0f, 1.0f };
         ColorToggleThickness nadeDamagePredict;
         Color4 nadeTrailPredict;
