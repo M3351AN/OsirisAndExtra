@@ -1852,7 +1852,8 @@ void GUI::renderMiscWindow() noexcept
     ImGui::hotkey2("", config->misc.autoPeekKey);
     ImGui::PopID();
     ImGui::Checkbox("Noscope crosshair", &config->misc.noscopeCrosshair);
-    ImGui::Checkbox("Recoil crosshair", &config->misc.recoilCrosshair);
+    //ImGui::Checkbox("Recoil crosshair", &config->misc.recoilCrosshair);
+    ImGuiCustom::colorPicker("Recoil crosshair", config->misc.recoilCrosshair);
     ImGui::Checkbox("Auto pistol", &config->misc.autoPistol);
     ImGui::Checkbox("Auto reload", &config->misc.autoReload);
     ImGui::Checkbox("Auto accept", &config->misc.autoAccept);

@@ -132,7 +132,7 @@ static HRESULT __stdcall present(IDirect3DDevice9* device, const RECT* src, cons
         Misc::drawKeyDisplay(ImGui::GetBackgroundDrawList());
         Misc::drawVelocity(ImGui::GetBackgroundDrawList());
         Misc::noscopeCrosshair();
-        Misc::recoilCrosshair();
+        Misc::recoilCrosshair(ImGui::GetBackgroundDrawList());
 
         Legitbot::updateInput();
         Visuals::updateInput();

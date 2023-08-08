@@ -1616,10 +1616,39 @@ void Misc::noscopeCrosshair() noexcept
         nozoom_crosshair->setValue(3);
 }
 
-void Misc::recoilCrosshair() noexcept
+void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 {
-    static auto recoilCrosshair = interfaces->cvar->findVar("cl_crosshair_recoil");
-    recoilCrosshair->setValue(config->misc.recoilCrosshair ? 1 : 0);
+    if (!config->misc.recoilCrosshair.enabled)
+        return;
+
+    if (!localPlayer || !localPlayer->isAlive())
+        return;
+
+    GameData::Lock lock;
+    const auto& local = GameData::local();
+
+    if (!local.exists || !local.alive || local.aimPunch.null())
+        return;
+
+    if (memory->input->isCameraInThirdPerson)
+        return;
+
+    const auto activeWeapon = localPlayer->getActiveWeapon();
+    if (!activeWeapon)
+        return;
+
+    if (ImVec2 pos; Helpers::worldToScreen(local.aimPunch, pos))
+    {
+        const auto& displaySize = ImGui::GetIO().DisplaySize;
+        const auto radius = std::tan(Helpers::deg2rad(0.5) / (16.0f / 6.0f)) / std::tan(Helpers::deg2rad(localPlayer->isScoped() ? localPlayer->fov() : (config->visuals.fov + 90.0f)) / 2.0f) * displaySize.x;
+        if (radius > displaySize.x || radius > displaySize.y || !std::isfinite(radius))
+            return;
+
+        const auto color = Helpers::calculateColor(config->legitbotFov);
+        drawList->AddCircle(localPlayer->shotsFired() > 1 ? pos : displaySize / 2.0f, radius, color | IM_COL32_A_MASK, 360);
+    }
+    /*static auto recoilCrosshair = interfaces->cvar->findVar("cl_crosshair_recoil");
+    recoilCrosshair->setValue(config->misc.recoilCrosshair ? 1 : 0);*/
 }
 
 void Misc::watermark() noexcept
