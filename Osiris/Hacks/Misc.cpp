@@ -43,6 +43,7 @@
 #include "../SDK/WeaponSystem.h"
 
 #include "../imguiCustom.h"
+#include "../SDK/GameMovement.h"
 
 bool Misc::isInChat() noexcept
 {
@@ -63,10 +64,12 @@ std::string currentBackKey = "";
 std::string currentRightKey = "";
 std::string currentLeftKey = "";
 int currentButtons = 0;
+Vector viewAngles{ };
 
 void Misc::gatherDataOnTick(UserCmd* cmd) noexcept
 {
     currentButtons = cmd->buttons;
+    viewAngles = cmd->viewangles;
 }
 
 void Misc::handleKeyEvent(int keynum, const char* currentBinding) noexcept
@@ -374,7 +377,6 @@ public:
 
         velocity = localPlayer->velocity().length2D();
         origin = localPlayer->getAbsOrigin();
-        eyeAngles = localPlayer->eyeAngles();
         onGround = localPlayer->flags() & 1;
         onLadder = localPlayer->moveType() == MoveType::LADDER;
         jumping = cmd->buttons & UserCmd::IN_JUMP && !(lastButtons & UserCmd::IN_JUMP) && onGround;
@@ -525,6 +527,7 @@ public:
     float maxHeight{ 0.0f };
     int bhops{ 0 };
     float sync{ 0.0f };
+
 } jumpStatsCalculations;
 
 void Misc::gotJump() noexcept
@@ -1684,7 +1687,7 @@ void Misc::headshotLine(ImDrawList* drawList) noexcept
     const auto& displaySize = ImGui::GetIO().DisplaySize;
     ImVec2 pos;
     pos.x = displaySize.x / 2.0f;
-    pos.y = displaySize.y / 2.0f - displaySize.y / (2.0f * std::tan((config->visuals.fov + 90.0f) / 2.0f * acos(-1) / 180.0f)) * std::tan(localPlayer->eyeAngles().x * acos(-1) / 180.0f);
+    pos.y = displaySize.y / 2.0f - displaySize.y / (2.0f * std::tan((config->visuals.fov + 90.0f) / 2.0f * acos(-1) / 180.0f)) * std::tan(viewAngles.x * acos(-1) / 180.0f);
     const auto radius = 0.003 / std::tan(Helpers::deg2rad(config->visuals.fov + 90.0f) / 2.0f) * displaySize.x;
     const auto color = Helpers::calculateColor(config->misc.recoilCrosshair);
     drawList->AddCircle(pos, radius, color | IM_COL32_A_MASK, 360);
