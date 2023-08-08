@@ -1695,8 +1695,8 @@ void Misc::headshotLine(ImDrawList* drawList) noexcept
 
     const auto& displaySize = ImGui::GetIO().DisplaySize;
     ImVec2 pos;
-    pos.x = displaySize.x / 2.0f;
-    pos.y = displaySize.y / 2.0f - displaySize.y / (2.0f * std::tan(localPlayer->isScoped() ? localPlayer->fov() : (config->visuals.fov + 90.0f) / 2.0f * M_PI / 180.0f)) * std::tan(viewAngles.x * M_PI / 180.0f);
+    pos.x = displaySize.x / 2.0f; 
+    pos.y = displaySize.y / 2.0f - displaySize.y / (2.0f * std::sin((config->visuals.fov + 90.0f) / 2.0f * M_PI / 180.0f) / std::sin(90.0f * M_PI / 180.0f)) * std::sin(viewAngles.x * M_PI / 180.0f) / std::sin(90.0f * M_PI / 180.0f);
     const auto color = Helpers::calculateColor(config->misc.recoilCrosshair);
     drawGapLine(drawList, pos, color);
 }
