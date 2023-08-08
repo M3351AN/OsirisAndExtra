@@ -374,6 +374,7 @@ public:
 
         velocity = localPlayer->velocity().length2D();
         origin = localPlayer->getAbsOrigin();
+        eyeAngles = localPlayer->eyeAngles();
         onGround = localPlayer->flags() & 1;
         onLadder = localPlayer->moveType() == MoveType::LADDER;
         jumping = cmd->buttons & UserCmd::IN_JUMP && !(lastButtons & UserCmd::IN_JUMP) && onGround;
@@ -511,6 +512,7 @@ public:
     bool shouldShow{ false };
     int jumps{ 0 };
     Vector origin{ };
+    Vector eyeAngles{ };
     Vector landingPosition{ };
     int ticksInAir{ 0 };
     int ticksSynced{ 0 };
