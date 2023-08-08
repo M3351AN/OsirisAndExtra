@@ -1644,11 +1644,9 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
         if (radius > displaySize.x || radius > displaySize.y || !std::isfinite(radius))
             return;
 
-        const auto color = Helpers::calculateColor(config->legitbotFov);
+        const auto color = Helpers::calculateColor(config->misc.recoilCrosshair);
         drawList->AddCircle(localPlayer->shotsFired() > 1 ? pos : displaySize / 2.0f, radius, color | IM_COL32_A_MASK, 360);
     }
-    /*static auto recoilCrosshair = interfaces->cvar->findVar("cl_crosshair_recoil");
-    recoilCrosshair->setValue(config->misc.recoilCrosshair ? 1 : 0);*/
 }
 
 void Misc::watermark() noexcept
