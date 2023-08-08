@@ -59,7 +59,9 @@ struct UserCmd {
     short mousedx;
     short mousedy;
     bool hasbeenpredicted;
-    PAD(24)
+    Vector viewanglesBackup;
+    int buttonsBackup;
+    PAD(8)
 };
 
 struct VerifiedUserCmd

@@ -34,6 +34,7 @@
 #include "../SDK/LocalPlayer.h"
 #include "../SDK/NetworkChannel.h"
 #include "../SDK/Panorama.h"
+#include "../SDK/PlayerResource.h"
 #include "../SDK/Prediction.h"
 #include "../SDK/Surface.h"
 #include "../SDK/UserCmd.h"
@@ -2495,7 +2496,39 @@ void Misc::oppositeHandKnife(FrameStage stage) noexcept
         cl_righthand->setValue(original);
     }
 }
+void Misc::chatRevealer(GameEvent& event, GameEvent* events) noexcept
+{
+    if (!config->misc.chatRevealer)
+        return;
+    if (!localPlayer)
+        return;
+    const auto entity = interfaces->entityList->getEntity(interfaces->engine->getPlayerForUserID(events->getInt("userid")));
 
+    if (!entity)
+        return;
+
+    std::string output = "\x0C\u2022Osiris\u2022\x01 ";
+
+    auto team = entity->getTeamNumber();
+    bool isAlive = entity->isAlive();
+    bool dormant = entity->isDormant();
+    if (dormant) {
+        if (const auto pr = *memory->playerResource)
+            isAlive = pr->getIPlayerResource()->isAlive(entity->index());
+    }
+    const char* text = event.getString("text");
+    const char* lastLocation = entity->lastPlaceName();
+    const std::string name = entity->getPlayerName();
+    if (team == localPlayer->getTeamNumber())
+        return;
+    if (!isAlive)
+        output += "*DEAD* ";
+
+    team == Team::TT ? output += "(Terrorist) " : output += "(Counter-Terrorist) ";
+
+    output = output + name + " @ " + lastLocation + " : " + text;
+    memory->clientMode->getHudChat()->printf(0, output.c_str());
+}
 static std::vector<std::uint64_t> reportedPlayers;
 static int reportbotRound;
 
