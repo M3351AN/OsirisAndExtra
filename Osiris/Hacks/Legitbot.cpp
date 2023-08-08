@@ -82,7 +82,7 @@ void Legitbot::run(UserCmd* cmd) noexcept
             interfaces->engine->setViewAngles(cmd->viewangles);
     }
 
-    if (!cfg[weaponIndex].betweenShots && activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime())
+    if (!cfg[weaponIndex].betweenShots && (activeWeapon->nextPrimaryAttack() > memory->globalVars->serverTime() || (activeWeapon->isFullAuto() && localPlayer->shotsFired() > 1)))
         return;
 
     if (!cfg[weaponIndex].ignoreFlash && localPlayer->isFlashed())
