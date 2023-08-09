@@ -1681,12 +1681,12 @@ void Misc::recoilCrosshair(ImDrawList* drawList) noexcept
 static void drawGapLine(ImDrawList* drawList, const ImVec2& pos, ImU32 color) noexcept
 {
     // left
-    drawList->AddRectFilled(ImVec2{ pos.x - 11, pos.y - 1 }, ImVec2{ pos.x - 3, pos.y + 2 }, color & IM_COL32_A_MASK);
-    drawList->AddRectFilled(ImVec2{ pos.x - 10, pos.y }, ImVec2{ pos.x - 4, pos.y + 1 }, color);
+    drawList->AddRectFilled(ImVec2{ pos.x - 21, pos.y - 1 }, ImVec2{ pos.x - 4, pos.y + 2 }, color & IM_COL32_A_MASK);
+    drawList->AddRectFilled(ImVec2{ pos.x - 20, pos.y }, ImVec2{ pos.x - 5, pos.y + 1 }, color);
 
     // right
-    drawList->AddRectFilled(ImVec2{ pos.x + 4, pos.y - 1 }, ImVec2{ pos.x + 12, pos.y + 2 }, color & IM_COL32_A_MASK);
-    drawList->AddRectFilled(ImVec2{ pos.x + 5, pos.y }, ImVec2{ pos.x + 11, pos.y + 1 }, color);
+    drawList->AddRectFilled(ImVec2{ pos.x + 5, pos.y - 1 }, ImVec2{ pos.x + 22, pos.y + 2 }, color & IM_COL32_A_MASK);
+    drawList->AddRectFilled(ImVec2{ pos.x + 6, pos.y }, ImVec2{ pos.x + 21, pos.y + 1 }, color);
 }
 void Misc::headshotLine(ImDrawList* drawList) noexcept
 {
@@ -1694,6 +1694,9 @@ void Misc::headshotLine(ImDrawList* drawList) noexcept
         return;
 
     if (!localPlayer || !localPlayer->isAlive())
+        return;
+
+    if (memory->input->isCameraInThirdPerson)
         return;
 
     const auto& displaySize = ImGui::GetIO().DisplaySize;
